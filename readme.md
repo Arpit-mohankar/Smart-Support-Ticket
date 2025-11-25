@@ -21,7 +21,7 @@ npm install
 
 ``` bash
 cd src
-node index.js
+node server.js
 ```
 
 ### ⚙️ Backend Features
