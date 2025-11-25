@@ -20,7 +20,8 @@ npm install
 ### ▶️ Start Server
 
 ``` bash
-npm run dev
+cd src
+node index.js
 ```
 
 ### ⚙️ Backend Features
