@@ -58,18 +58,62 @@ npm run dev
 
 > All ticket/note routes require JWT in Authorization header.
 
+📁 Project Structure
+``` 
+project-root/
+├── backend/
+│   ├── src/
+│   │   ├── config/
+│   │   │   └── db.js              # Database setup & seeding
+│   │   ├── controllers/
+│   │   │   ├── authController.js   # Login/register logic
+│   │   │   ├── ticketController.js # Ticket CRUD operations
+│   │   │   └── noteController.js   # Note operations
+│   │   ├── middleware/
+│   │   │   ├── auth.js            # JWT verification
+│   │   │   └── validate.js        # Zod validation middleware
+│   │   ├── schemas/
+│   │   │   └── validation.js      # Zod schemas
+│   │   └── server.js              # Express app entry point
+│   ├── package.json
+│   └── database.db                # SQLite database (auto-generated)
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── TicketList.jsx     # Main ticket table
+│   │   │   ├── TicketDrawer.jsx   # Side panel details
+│   │   │   ├── LoadingSkeleton.jsx
+│   │   │   ├── Login.jsx
+│   │   │   └── Register.jsx
+│   │   ├── hooks/
+│   │   │   └── useDebounce.js     # Search debouncing
+│   │   ├── services/
+│   │   │   └── api.js             # Axios configuration
+│   │   ├── App.jsx                # Routes & protected routes
+│   │   └── main.jsx               # React entry point
+│   ├── package.json
+│   └── index.html
+│
+└── README.md                       # This file
+
+```
+
 # ⚡ Optimistic Updates
 
--   Instant UI update\
--   Background API call\
--   Rollback on failure\
--   Uses React Query: `onMutate`, `onError`, cache sync
+1.Instant UI Update - When a user changes ticket status/priority or adds a note, the UI updates immediately before the API call completes
+2.Background API Call - The mutation is sent to the server
+3.Success Path - If successful, the cache is invalidated and fresh data is fetched
+4.Error Path - If the API fails, the UI automatically rolls back to the previous state and shows an error toast
 
-# 🔄 Auto-Refresh
-
--   Polls every **10 seconds**\
--   Keeps filters, search, pagination, scroll\
--   Shows non-intrusive "Updating..."
+# 🔄 Auto-Refresh Implementation
+```
+const { data } = useQuery({
+  queryKey: ['tickets', { page, status, priority, search }],
+  queryFn: () => tickets.getAll({...}),
+  refetchInterval: 10000, // Poll every 10 seconds
+});
+```
 
 # 📉 Tradeoffs
 
@@ -81,30 +125,21 @@ npm run dev
   Debounced search   Fewer calls         Delay
   Soft delete        Recoverable         Needs filtering
 
-# 🛠️ Roadmap
+  🚀 Potential Improvements
+ WebSocket Integration - Replace polling with real-time updates
 
-### High Priority
+ Refresh Token System - Improve security with token rotation
 
--   WebSockets\
--   Refresh tokens\
--   Rate limiting\
--   DOMPurify
+ Rate Limiting - Protect API from abuse (express-rate-limit)
 
-### Medium
+ Input Sanitization - Enhanced XSS protection (DOMPurify)
 
--   `/stats` endpoint\
--   Assignment\
--   Email alerts\
--   File attachments
-
-### Nice to Have
-
--   Keyboard shortcuts\
--   Bulk actions\
--   Advanced search\
--   CSV export
+ Error Boundaries - Graceful React error handling
 
 # 🧰 Tech Stack
 
 **Backend:** Node.js, Express, SQLite, JWT, bcrypt, Zod\
 **Frontend:** React, TanStack Query, Tailwind, Router
+
+👨‍💻 Author
+Arpit Mohankar
