@@ -1,4 +1,4 @@
-# 🚀 Support Ticket System --- Full Setup Guide
+# 🚀 Support Ticket System 
 
 ## 📌 Prerequisites
 
